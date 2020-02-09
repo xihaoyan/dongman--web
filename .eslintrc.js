@@ -1,25 +1,36 @@
-// https://eslint.org/docs/user-guide/configuring
-
 module.exports = {
   root: true,
-  parserOptions: {
-    parser: 'babel-eslint'
-  },
+  parser: 'vue-eslint-parser',
   env: {
     browser: true,
+    node: true,
+    es6: true
+  },
+  parserOptions: {
+    "parser": "babel-eslint",
+    "sourceType": "module"
+  },
+  //  https:// github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
+  // extends: 'standard',
+  //  required to lint *.vue files
+  plugins: [
+    "vue"
+  ],
+  globals: {
+    think: true,
+    Promise: true,
+    initGeetest: true,
+    UE: true,
+    AMap: true,
+    AMapUI: true,
+    Loca: true
   },
   extends: [
-    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
-    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
-    'plugin:vue/essential',
-    // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-    'standard'
+    // add more generic rulesets here, such as:
+    // 'eslint:recommended',
+    // 'plugin:vue/essential'
   ],
-  // required to lint *.vue files
-  plugins: [
-    'vue'
-  ],
-  // add your custom rules here
+  //  add your custom rules here
   rules: {
 
     /*Possible Errors*/

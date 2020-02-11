@@ -64,15 +64,18 @@ export default {
         graphs: [
           {
             name: "卑微帝王",
-            num: 1
+            num: 1,
+            images: "1,2,3,4",  // 存储该章节漫文件id, 如果是动漫，由多个ID，用逗号分割
           },
           {
             name: "讨厌飞行",
-            num: 2
+            num: 2,
+            images: "1,2,3,4"
           },
           {
             name: "美好的正太",
-            num: 3
+            num: 3,
+            images: "1,2,3,4"
           }
         ],
         remarks: [

@@ -31,5 +31,6 @@ export default {
   overflow: hidden;
   background: url("./assets/images/bg.jpg") 100% 100%;
   position: relative;
+  text-align: left;
 }
 </style>

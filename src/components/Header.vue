@@ -7,6 +7,7 @@
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
         <el-dropdown-item @click.native="toMyStar">我的收藏</el-dropdown-item>
+        <el-dropdown-item @click.native="toMyHistory">观看历史</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
     <div class="search">
@@ -53,6 +54,9 @@ export default {
     },
     toMyStar() {
       this.$router.push("/mystar");
+    },
+    toMyHistory() {
+      this.$router.push("/history");
     }
   }
 }

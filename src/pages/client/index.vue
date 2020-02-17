@@ -1,24 +1,28 @@
 <template>
-  <div id="list">
-    <Header></Header>
+  <div id="list" v-loading.fullscreen="loading">
+    <Header ref="header" @getListData="getListData"></Header>
     <div class="content">
-      <el-card :body-style="{ padding: '0px' }" v-for="item in listData" :key="item.id">
-        <img :src="item.img" class="image" @click="toDetail(item.id)">
-        <div style="padding: 14px;float:left;">
-          <div class="name" @click="toDetail(item.id)">{{item.name}}</div>
-          <div class="desc">{{item.desc}}</div>
-          <div class="bottom clearfix">
-            <time class="time">更新至{{ item.last_hua }}</time>
-            <el-button type="primary" class="button" size="small">开始阅读</el-button>
+      <template v-if="listData && listData.length > 0">
+        <el-card :body-style="{ padding: '0px' }" v-for="item in listData" :key="item.id">
+          <img :src="item.img" class="image" @click="toDetail(item.id)">
+          <div class="card_text">
+            <div class="name" @click="toDetail(item.id)">{{item.name}}</div>
+            <div class="desc">{{item.desc}}</div>
+            <div class="bottom clearfix">
+              <time class="time">更新至{{ item.last_hua }}</time>
+            </div>
+            <el-button type="danger" class="button" size="small" @click="startRead(item.id)">开始阅读</el-button>
           </div>
-        </div>
-      </el-card>
+        </el-card>
+      </template>
+      <Nodata v-else></Nodata>
+
     </div>
-    <div class="pagination">
+    <div class="pagination" v-if="listData && listData.length > pageSize">
       <el-pagination
         background
         layout="prev, pager, next"
-        :total="1000">
+        :total="total">
       </el-pagination>
     </div>
 
@@ -26,135 +30,52 @@
 </template>
 <script>
 import Header from "../../components/Header";
+import Nodata from "../../components/Nodata";
+import qs from "qs";
 export default {
   components: {
-    Header
+    Header,
+    Nodata
   },
   data() {
     return {
-      listData: [
-        {
-          id: "0",
-          name: "爆宠狂妻之神医五小姐",
-          img: "https://manhua.qpic.cn/vertical/0/09_11_52_15695e53333a1b4e2cb377dff8c11a04_1541735521990.jpg/420",
-          desc: "【每周双更！周五/周日更新！】 现代女杀手穿越后重生于仙界废柴---将军府五小姐（少爷）司马幽月之身，由此开启了废柴逆袭模式，一路开挂，收获各类神兽和法器，并在此过程中与各色男主角们相遇…… 《神医五小姐》漫画读者群：626088440，二群：851059663",
-          status: "2",
-          star: "2",
-          type: "玄幻",
-          auth: "风行漫画工作室 ",
-          last_hua: "87"
-        },
-        {
-          id: "1",
-          name: "爆宠狂妻之神医五小姐",
-          img: "https://manhua.qpic.cn/vertical/0/09_11_52_15695e53333a1b4e2cb377dff8c11a04_1541735521990.jpg/420",
-          desc: "【每周双更！周五/周日更新！】 现代女杀手穿越后重生于仙界废柴---将军府五小姐（少爷）司马幽月之身，由此开启了废柴逆袭模式，一路开挂，收获各类神兽和法器，并在此过程中与各色男主角们相遇…… 《神医五小姐》漫画读者群：626088440，二群：851059663",
-          status: "2",
-          star: "2",
-          type: "玄幻",
-          auth: "风行漫画工作室 ",
-          last_hua: "87"
-        },
-        {
-          id: "2",
-          name: "爆宠狂妻之神医五小姐",
-          img: "https://manhua.qpic.cn/vertical/0/09_11_52_15695e53333a1b4e2cb377dff8c11a04_1541735521990.jpg/420",
-          desc: "【每周双更！周五/周日更新！】 现代女杀手穿越后重生于仙界废柴---将军府五小姐（少爷）司马幽月之身，由此开启了废柴逆袭模式，一路开挂，收获各类神兽和法器，并在此过程中与各色男主角们相遇…… 《神医五小姐》漫画读者群：626088440，二群：851059663",
-          status: "2",
-          star: "2",
-          type: "玄幻",
-          auth: "风行漫画工作室 ",
-          last_hua: "87"
-        },
-        {
-          id: "3",
-          name: "爆宠狂妻之神医五小姐",
-          img: "https://manhua.qpic.cn/vertical/0/09_11_52_15695e53333a1b4e2cb377dff8c11a04_1541735521990.jpg/420",
-          desc: "【每周双更！周五/周日更新！】 现代女杀手穿越后重生于仙界废柴---将军府五小姐（少爷）司马幽月之身，由此开启了废柴逆袭模式，一路开挂，收获各类神兽和法器，并在此过程中与各色男主角们相遇…… 《神医五小姐》漫画读者群：626088440，二群：851059663",
-          status: "2",
-          star: "2",
-          type: "玄幻",
-          auth: "风行漫画工作室 ",
-          last_hua: "87"
-        },
-        {
-          id: "4",
-          name: "爆宠狂妻之神医五小姐",
-          img: "https://manhua.qpic.cn/vertical/0/09_11_52_15695e53333a1b4e2cb377dff8c11a04_1541735521990.jpg/420",
-          desc: "【每周双更！周五/周日更新！】 现代女杀手穿越后重生于仙界废柴---将军府五小姐（少爷）司马幽月之身，由此开启了废柴逆袭模式，一路开挂，收获各类神兽和法器，并在此过程中与各色男主角们相遇…… 《神医五小姐》漫画读者群：626088440，二群：851059663",
-          status: "2",
-          star: "2",
-          type: "玄幻",
-          auth: "风行漫画工作室 ",
-          last_hua: "87"
-        },
-        {
-          id: "5",
-          name: "爆宠狂妻之神医五小姐",
-          img: "https://manhua.qpic.cn/vertical/0/09_11_52_15695e53333a1b4e2cb377dff8c11a04_1541735521990.jpg/420",
-          desc: "【每周双更！周五/周日更新！】 现代女杀手穿越后重生于仙界废柴---将军府五小姐（少爷）司马幽月之身，由此开启了废柴逆袭模式，一路开挂，收获各类神兽和法器，并在此过程中与各色男主角们相遇…… 《神医五小姐》漫画读者群：626088440，二群：851059663",
-          status: "2",
-          star: "2",
-          type: "玄幻",
-          auth: "风行漫画工作室 ",
-          last_hua: "87"
-        },
-        {
-          id: "6",
-          name: "爆宠狂妻之神医五小姐",
-          img: "https://manhua.qpic.cn/vertical/0/09_11_52_15695e53333a1b4e2cb377dff8c11a04_1541735521990.jpg/420",
-          desc: "【每周双更！周五/周日更新！】 现代女杀手穿越后重生于仙界废柴---将军府五小姐（少爷）司马幽月之身，由此开启了废柴逆袭模式，一路开挂，收获各类神兽和法器，并在此过程中与各色男主角们相遇…… 《神医五小姐》漫画读者群：626088440，二群：851059663",
-          status: "2",
-          star: "2",
-          type: "玄幻",
-          auth: "风行漫画工作室 ",
-          last_hua: "87"
-        },
-        {
-          id: "7",
-          name: "爆宠狂妻之神医五小姐",
-          img: "https://manhua.qpic.cn/vertical/0/09_11_52_15695e53333a1b4e2cb377dff8c11a04_1541735521990.jpg/420",
-          desc: "【每周双更！周五/周日更新！】 现代女杀手穿越后重生于仙界废柴---将军府五小姐（少爷）司马幽月之身，由此开启了废柴逆袭模式，一路开挂，收获各类神兽和法器，并在此过程中与各色男主角们相遇…… 《神医五小姐》漫画读者群：626088440，二群：851059663",
-          status: "2",
-          star: "2",
-          type: "玄幻",
-          auth: "风行漫画工作室 ",
-          last_hua: "87"
-        },
-        {
-          id: "8",
-          name: "爆宠狂妻之神医五小姐",
-          img: "https://manhua.qpic.cn/vertical/0/09_11_52_15695e53333a1b4e2cb377dff8c11a04_1541735521990.jpg/420",
-          desc: "【每周双更！周五/周日更新！】 现代女杀手穿越后重生于仙界废柴---将军府五小姐（少爷）司马幽月之身，由此开启了废柴逆袭模式，一路开挂，收获各类神兽和法器，并在此过程中与各色男主角们相遇…… 《神医五小姐》漫画读者群：626088440，二群：851059663",
-          status: "2",
-          star: "2",
-          type: "玄幻",
-          auth: "风行漫画工作室 ",
-          last_hua: "87"
-        },
-        {
-          id: "9",
-          name: "爆宠狂妻之神医五小姐",
-          img: "https://manhua.qpic.cn/vertical/0/09_11_52_15695e53333a1b4e2cb377dff8c11a04_1541735521990.jpg/420",
-          desc: "【每周双更！周五/周日更新！】 现代女杀手穿越后重生于仙界废柴---将军府五小姐（少爷）司马幽月之身，由此开启了废柴逆袭模式，一路开挂，收获各类神兽和法器，并在此过程中与各色男主角们相遇…… 《神医五小姐》漫画读者群：626088440，二群：851059663",
-          status: "2",
-          star: "2",
-          type: "玄幻",
-          auth: "风行漫画工作室 ",
-          last_hua: "87"
-        }
-      ]
+      loading: false,
+      listData: [],
+      total: 0,
+      pageSize: 10,
+      pageNumber: 1
     }
 
+  },
+  mounted() {
+    this.getListData({type: "全部"});
   },
   methods: {
     toDetail(id) {
       this.$router.push(`/detail/${id}`)
-    }
+    },
+    async getListData(data) {
+      this.loading = true;
+      let params =  {
+        pageNumber: this.pageNumber,
+        pageSize: this.pageSize
+      }
+      if(data) {
+        params = Object.assign(data, params);
+      }
+      const query = qs.stringify(params);
+      const res = await this.$axios.get("/api/list/list?" + query);
+      this.listData = res.data.data.list;
+      this.total = res.data.data.total;
+      this.loading = false;
+    },
+    startRead(id) {
+      this.$router.push("/read/" + id);
+    },
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   #list{
     box-sizing: border-box;
     height: 100%;
@@ -179,7 +100,9 @@ export default {
         float: left;
         .image{
           width: 140px;
+          height: 192px;
           cursor: pointer;
+          float: left;
         }
         .name{
           cursor: pointer;
@@ -195,6 +118,14 @@ export default {
           display: flex;
           justify-content: flex-start;
         }
+        .button{
+          margin-top: 20px;
+        }
+        .card_text{
+          padding: 14px;
+          float: left;
+          width: calc(100% - 168px);
+        }
       }
 
     }
@@ -202,6 +133,11 @@ export default {
       width: 100%l;
       background: rgba(255,255,255,.6);
       padding-bottom: 16px;
+      clear: both;
+      overflow: hidden;
+      .el-pagination{
+        float: right;
+      }
     }
   }
 

@@ -1,25 +1,18 @@
 <template>
-  <div id="mystar">
+  <div id="mystar" v-loading.fullscreen="loading">
     <Header></Header>
     <div class="content">
       <el-card :body-style="{ padding: '0px' }" v-for="item in listData" :key="item.id">
         <img :src="item.img" class="image" @click="toDetail(item.id)">
-        <div style="padding: 14px;float:left;">
+        <div class="card_text">
           <div class="name" @click="toDetail(item.id)">{{item.name}}</div>
           <div class="desc">{{item.desc}}</div>
           <div class="bottom clearfix">
             <time class="time">更新至{{ item.last_hua }}</time>
-            <el-button type="primary" class="button" size="small">开始阅读</el-button>
+            <el-button type="primary" class="button" size="small" @click="startRead(item.id)">开始阅读</el-button>
           </div>
         </div>
       </el-card>
-    </div>
-    <div class="pagination">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="1000">
-      </el-pagination>
     </div>
 
   </div>
@@ -32,6 +25,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       listData: [
         {
           id: "0",
@@ -147,14 +141,29 @@ export default {
     }
 
   },
+  mounted() {
+    this.getStarList();
+  },
   methods: {
     toDetail(id) {
       this.$router.push(`/detail/${id}`)
-    }
+    },
+    async getStarList() {
+      this.loading = true;
+      this.$axios.get("/api/list/getStarList?userId=" + sessionStorage.getItem("id"))
+      .then(res => {
+        this.loading = false;
+        this.listData = res.data.data;
+      })
+
+    },
+    startRead(id) {
+      this.$router.push("/read/" + id);
+    },
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   #mystar{
     box-sizing: border-box;
     height: 100%;
@@ -165,7 +174,7 @@ export default {
     .content{
       box-sizing: border-box;
       width: 100%;
-      height: calc(100% - 166px);
+      height: calc(100% - 120px);
       padding: 20px 20px 20px 40px;
       background: rgba(255,255,255,.6);
       // background: rgba(0,0,0,.6);
@@ -180,10 +189,18 @@ export default {
         float: left;
         .image{
           width: 140px;
+          float: left;
           cursor: pointer;
+          height: 190px;
+        }
+        .card_text{
+          padding: 14px;
+          width: calc(100% - 168px);
+          float:left;
         }
         .name{
           cursor: pointer;
+          margin-bottom: 20px;
         }
         .desc{
           overflow: hidden;
@@ -196,13 +213,19 @@ export default {
           display: flex;
           justify-content: flex-start;
         }
+        .bottom{
+          margin-top: 20px;
+          clear: both;
+          overflow: hidden;
+          time{
+            float: left;
+          }
+          .el-button{
+            float: right;
+          }
+        }
       }
 
-    }
-    .pagination{
-      width: 100%l;
-      background: rgba(255,255,255,.6);
-      padding-bottom: 16px;
     }
   }
 

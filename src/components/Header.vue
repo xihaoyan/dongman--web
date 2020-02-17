@@ -16,7 +16,7 @@
       </el-input>
     </div>
     <div class="nav">
-      <el-radio-group v-model="activeType">
+      <el-radio-group v-model="activeType" @change="typeChange">
         <el-radio-button label="全部" value="0"></el-radio-button>
         <el-radio-button label="玄幻" value="1"></el-radio-button>
         <el-radio-button label="校园" value="2"></el-radio-button>
@@ -45,7 +45,11 @@ export default {
   },
   methods: {
     doSearch() {
-
+      this.$emit("getListData", {keyword: this.keyword, type: this.activeType});
+    },
+    typeChange() {
+      console.log("888")
+      this.$emit("getListData", {keyword: this.keyword, type: this.activeType});
     },
     logout() {
       console.log("22")

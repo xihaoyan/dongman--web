@@ -1,7 +1,7 @@
 <template>
-  <div id="addlist" v-loading="loading">
-    <h3 style="color:#333;text-align:center;margin-bottom:20px;">新建动漫</h3>
+  <div id="addlist" v-loading.fullscreen="loading">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" size="small">
+      <h3 style="color:#333;text-align:center;margin-bottom:20px;">{{title}}动漫</h3>
       <el-row>
         <el-col :span="6">
           <el-form-item label="动漫封面" prop="img">
@@ -12,7 +12,7 @@
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
-              <img v-if="ruleForm.img" :src="'http://localhost:8366/' + ruleForm.img" class="avatar">
+              <img v-if="ruleForm.img" :src="ruleForm.img" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
@@ -57,7 +57,7 @@
         </el-col>
       </el-row>
       <div class="title">动漫章节
-        <el-button size="small" type="primary" @click="addGraph">新增章节</el-button>
+        <el-button size="small" type="primary" @click="addGraph" icon="el-icon-plus">新增章节</el-button>
       </div>
       <el-table
         :data="graphsData"
@@ -70,7 +70,7 @@
           label="第几章"
           width="180">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.num"></el-input>
+            <el-input v-model.number="scope.row.num"></el-input>
           </template>
         </el-table-column>
         <el-table-column
@@ -94,6 +94,7 @@
               >
                 <el-button size="small" type="text">上传文件</el-button>
               </el-upload>
+
               {{scope.row.images}}
             </div>
           </template>
@@ -106,12 +107,13 @@
             <div>
               <el-button size="small" type="text" @click="addGraph(scope.$index)">新增</el-button>
               <el-button size="small" type="text" @click="deleteGraph(scope.$index)">删除</el-button>
+              <el-button size="small" type="text" @click="deleteFile(scope.$index)">清空文件</el-button>
             </div>
           </template>
         </el-table-column>
       </el-table>
       <el-form-item class="bths">
-        <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确认提交</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -151,38 +153,25 @@ export default {
           { required: true, message: '请填写动漫描述', trigger: 'blur' }
         ]
       },
-      graphsData: [
-        {
-          num: '7',
-          name: '王小虎',
-          images: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          num: '2',
-          name: '王小虎',
-          images: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          num: '4',
-          name: '王小虎',
-          images: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          num: '1',
-          name: '王小虎',
-          images: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          num: '6',
-          name: '王小虎',
-          images: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          num: '3',
-          name: '王小虎',
-          images: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          num: '5',
-          name: '王小虎',
-          images: '上海市普陀区金沙江路 1518 弄'
+      graphsData: [],
+      fileList: [],
+      title: "新增",
+      itemId: null,
+    }
+  },
+  watch: {
+    "$route": {
+      handler(val) {
+        if(val.params.id) {
+          this.title = "修改";
+          this.itemId = val.params.id;
+          this.getInfoItem()
+        }else{
+          this.title = "新增";
         }
-      ],
-      fileList: []
+      },
+      immediate: true,
+      deep: true
     }
   },
   methods: {
@@ -202,19 +191,36 @@ export default {
           })
           if(ls) {
             this.graphsData.sort(this.sortJson);
-            await this.$axios.post("/api/list/add", {
-              img: this.ruleForm.img,
-              name: this.ruleForm.name,
-              type: this.ruleForm.type,
-              auth: this.ruleForm.auth,
-              desc: this.ruleForm.desc,
-              status: this.ruleForm.status,
-              va_type: this.ruleForm.va_type,
-              graphs: JSON.stringify(this.graphsData),
-              last_hua: this.graphsData[this.graphsData.length - 1].num
-            });
+            if(this.title == "新增") {
+              await this.$axios.post("/api/list/add", {
+                img: this.ruleForm.img,
+                name: this.ruleForm.name,
+                type: this.ruleForm.type,
+                auth: this.ruleForm.auth,
+                desc: this.ruleForm.desc,
+                status: this.ruleForm.status,
+                va_type: this.ruleForm.va_type,
+                graphs: JSON.stringify(this.graphsData),
+                last_hua: this.graphsData[this.graphsData.length - 1].num
+              });
+            }else{
+              await this.$axios.post("/api/list/update", {
+                id: this.itemId,
+                img: this.ruleForm.img,
+                name: this.ruleForm.name,
+                type: this.ruleForm.type,
+                auth: this.ruleForm.auth,
+                desc: this.ruleForm.desc,
+                status: this.ruleForm.status,
+                va_type: this.ruleForm.va_type,
+                graphs: JSON.stringify(this.graphsData),
+                last_hua: this.graphsData[this.graphsData.length - 1].num
+              });
+            }
+
             this.$message.success("提交成功")
             this.loading = false;
+            this.$router.push("/manage")
 
           }else {
             this.$message.error("请完善章节信息");
@@ -228,7 +234,11 @@ export default {
       });
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      if(this.title == "新增") {
+        this.$refs[formName].resetFields();
+      }else {
+        this.getInfoItem();
+      }
     },
     // 上传封面
     handleAvatarSuccess(res, file) {
@@ -251,8 +261,11 @@ export default {
       if(res.data.code == 0) {
         this.graphsData.forEach((item, i) => {
           if(index == i) {
-            const lsarr = item.images.split(",");
-            lsarr.push(res.data.data.id);
+            const lsarr = item.images ? item.images.split(",") : [];
+            if(res.data.data.id) {
+              lsarr.push(res.data.data.id);
+            }
+            console.log(lsarr, "333")
             item.images = lsarr.join(",");
           }
         })
@@ -275,6 +288,26 @@ export default {
     },
     deleteGraph(index) {
       this.graphsData.splice(index, 1);
+    },
+    deleteFile(index) {
+      this.graphsData.forEach((item, i) => {
+        if(i == index) {
+          item.images = "";
+        }
+      })
+    },
+    getInfoItem() {
+      this.$axios.get("/api/list/getItem?id=" + this.itemId).then(res => {
+        const data = res.data.data;
+        this.ruleForm.img = data.img;
+        this.ruleForm.name = data.name;
+        this.ruleForm.type = data.type;
+        this.ruleForm.auth = data.auth;
+        this.ruleForm.desc = data.desc;
+        this.ruleForm.status = data.status;
+        this.ruleForm.va_type = data.va_type;
+        this.graphsData = JSON.parse(data.graphs);
+      })
     }
   }
 }

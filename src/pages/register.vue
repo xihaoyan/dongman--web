@@ -12,6 +12,7 @@
         <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
+      <p>已有账号，<router-link to="/login"><span>去登录</span></router-link></p>
     </el-form>
   </div>
 </template>
@@ -79,6 +80,14 @@ export default {
         margin-bottom: 20px;
         width: 100%;
         text-align: center;
+      }
+      p{
+        text-align: right;
+        span{
+          color: #E6A23C;
+          font-weight: 900;
+
+        }
       }
     }
   }

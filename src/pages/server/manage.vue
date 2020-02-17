@@ -1,11 +1,17 @@
 <template>
   <div id="manage" v-loading="loading">
+    <Headerh></Headerh>
     <div class="container">
+      <h3>动漫管理</h3>
+      <router-link to="/editlist">
+        <el-button type="primary" class="add_btn" size="small" icon="el-icon-plus">新增动漫</el-button>
+      </router-link>
       <el-table
         :data="graphsData"
         border
         style="width: 100%"
         size="small"
+        stripe
       >
         <el-table-column
           prop="name"
@@ -43,20 +49,43 @@
           label="最后更新"
         >
         </el-table-column>
+        <el-table-column
+          prop="operate"
+          label="操作"
+          width="340px"
+        >
+          <template scope="scope">
+            <el-button plain class="add_btn" type="primary" size="mini" icon="el-icon-edit" @click="toEdit(scope.row.id)">编辑</el-button>
+            <el-button plain class="add_btn" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+            <el-button plain class="add_btn" type="warning" size="mini" icon="el-icon-document" @click="toRemark(scope.row.id)">评论管理</el-button>
+          </template>
+        </el-table-column>
       </el-table>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-size="pageSize"
+        layout="prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </div>
-
   </div>
 </template>
 <script>
+import Headerh from "../../components/Headerh"
 export default {
   data() {
     return {
       loading: false,
       graphsData: [],
-      total: 0
-
+      total: 0,
+      pageNumber: 1,
+      pageSize: 10,
+      currentPage: 1
     }
+  },
+  components: {
+    Headerh
   },
   mounted() {
     this.getListData();
@@ -68,14 +97,21 @@ export default {
         pageNumber: 1,
         pageSize: 10
       });
-      console.log(res, "res")
       this.graphsData = res.data.data.list;
       this.total = res.data.data.total;
       this.loading = false;
-
-
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.pageNumber = val;
+      this.getListData();
+    },
+    toEdit(id) {
+      this.$router.push("/editlist/" + id);
+    },
+    toRemark(id) {
+      this.$router.push("/remark/" + id);
     }
-
   }
 }
 </script>
@@ -85,13 +121,26 @@ export default {
     height: 100%;
     padding: 20px 40px;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow-y: hidden;
+    // overflow-y: auto;
     .container{
       width: 100%;
       box-sizing: border-box;
       background: rgba(255,255,255,.6);
       padding: 20px;
       height: 100%;
+      overflow-y: auto;
+      h3{
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .add_btn{
+        margin-bottom: 20px;
+      }
+      .el-pagination{
+        float: right;
+        margin-top: 20px;
+      }
     }
 
   }

@@ -3,13 +3,14 @@
     <Header></Header>
     <div class="content">
       <el-card :body-style="{ padding: '0px' }" v-for="item in listData" :key="item.id">
-        <img :src="item.img" class="image" @click="toDetail(item.id)">
+        <!-- item.id, item.currentPage -->
+        <img :src="item.img" class="image">
         <div style="padding: 14px;float:left;">
-          <div class="name" @click="toDetail(item.id)">{{item.name}}</div>
+          <div class="name">{{item.name}}</div>
           <div class="desc">{{ item.desc }}</div>
           <div class="bottom clearfix">
             <time class="time">上次阅读至{{ item.last_hua }}</time>
-            <el-button type="primary" class="button" size="small">继续阅读</el-button>
+            <el-button type="primary" class="button" size="small" @click="toRead(item.id, item.currentPage)">继续阅读</el-button>
           </div>
         </div>
       </el-card>
@@ -147,9 +148,23 @@ export default {
     }
 
   },
+  mounted() {
+    this.getHistory();
+  },
   methods: {
+    async getHistory() {
+      this.loading = true;
+      this.$axios.get("/api/user/getHistory?userId=" + sessionStorage.getItem("id"))
+      .then(res => {
+        this.loading = false;
+        this.listData = res.data.data;
+      })
+    },
     toDetail(id) {
       this.$router.push(`/detail/${id}`)
+    },
+    toRead(id, currentPage) {
+      this.$router.push("/read/" + id + "?currentPage=" + currentPage);
     }
   }
 }

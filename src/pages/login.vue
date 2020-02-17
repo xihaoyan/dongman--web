@@ -12,6 +12,7 @@
         <el-button type="primary" @click="submitForm('ruleForm')">登陆</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
+      <p>还没有账号，<router-link to="/register"><span>去注册</span></router-link></p>
     </el-form>
   </div>
 </template>
@@ -48,6 +49,8 @@ export default {
             if(res.data.data.code == 0) {
               const ls = res.data.data;
               sessionStorage.setItem("Token", ls.data.username);
+              sessionStorage.setItem("id", ls.data.id);
+              sessionStorage.setItem("star", ls.data.star);
               this.$message.success("登陆成功");
               setTimeout(function() {
                 if(ls.data.role == 1) {
@@ -91,6 +94,14 @@ export default {
         margin-bottom: 20px;
         width: 100%;
         text-align: center;
+      }
+      p{
+        text-align: right;
+        span{
+          color: #E6A23C;
+          font-weight: 900;
+
+        }
       }
     }
   }

@@ -6,12 +6,11 @@ import Home from '@/pages/client/index.vue';
 import MyStar from '@/pages/client/mystar.vue';
 import Detail from '@/pages/client/detail.vue';
 import History from '@/pages/client/history.vue';
+import Read from '@/pages/client/read.vue';
 
 import Manage from '@/pages/server/manage.vue';
 import Editlist from '@/pages/server/editlist.vue';
-
-
-import Demo from '@/pages/server/demo.vue';  // 这是要给公司演示的demo文件，请忽略
+import Remark from '@/pages/server/remark.vue';
 
 
 Vue.use(Router)
@@ -52,17 +51,28 @@ Vue.use(Router)
       component: History
     },
     {
+      path: '/read/:id',
+      name: 'Read',
+      meta: {
+        auth: true   // 用于判断当前路由是否需要登陆
+      },
+      component: Read
+    },
+    {
       path: '/editlist',
-      name: 'editlist',
+      name: 'addlist',
       meta: {
         auth: true   // 用于判断当前路由是否需要登陆
       },
       component: Editlist
     },
     {
-      path: '/demo',
-      name: 'Demo',
-      component: Demo
+      path: '/editlist/:id',
+      name: 'editlist',
+      meta: {
+        auth: true   // 用于判断当前路由是否需要登陆
+      },
+      component: Editlist
     },
     {
       path: '/manage',
@@ -71,6 +81,14 @@ Vue.use(Router)
         auth: true   // 用于判断当前路由是否需要登陆
       },
       component: Manage
+    },
+    {
+      path: '/remark/:id',
+      name: 'Remark',
+      meta: {
+        auth: true   // 用于判断当前路由是否需要登陆
+      },
+      component: Remark
     },
     {
       path: '/login',

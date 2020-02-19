@@ -1,5 +1,5 @@
 <template>
-  <div id="header">
+  <div id="headern">
     <el-dropdown class="user_info">
       <span class="el-dropdown-link">
         <i class="el-icon-user-solid"></i>
@@ -11,20 +11,10 @@
         <el-dropdown-item @click.native="toMyHistory">观看历史</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-    <div class="search">
-      <el-input placeholder="请输入内容" v-model="keyword" class="input-with-select">
-        <el-button slot="append" icon="el-icon-search" style="width:80px" @click="doSearch"></el-button>
-      </el-input>
-    </div>
     <div class="nav">
-      <el-radio-group v-model="activeType" @change="typeChange">
-        <el-radio-button label="全部" value="0"></el-radio-button>
-        <el-radio-button label="玄幻" value="1"></el-radio-button>
-        <el-radio-button label="校园" value="2"></el-radio-button>
-        <el-radio-button label="言情" value="3"></el-radio-button>
-        <el-radio-button label="爆笑" value="4"></el-radio-button>
-        <el-radio-button label="推理" value="5"></el-radio-button>
-      </el-radio-group>
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">去首页</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
   </div>
 </template>
@@ -71,15 +61,13 @@ export default {
   z-index: 999;
   color: #000;
 }
-.search{
-  width: 600px;
-  margin: 0px auto 30px;
-  .el-input__inner:focus{
-    border-color: #DCDFE6;
-  }
+.el-breadcrumb{
+  margin-right: 40px;
+  height: 32px;
+  line-height: 32px;
 }
+
 .nav{
-  padding: 0px 40px;
   display: flex;
   justify-content: flex-start;
   margin-bottom: 20px;

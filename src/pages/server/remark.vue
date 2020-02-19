@@ -21,7 +21,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="update_time"
+          prop="update_Date"
           label="评论时间"
         >
         </el-table-column>
@@ -101,6 +101,7 @@ export default {
         margin-top: 20px;
       }
     }
+
 
   }
 

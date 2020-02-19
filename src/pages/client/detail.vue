@@ -13,7 +13,7 @@
             <div class="auth">作者：{{detailData.auth}}</div>
             <div class="desc">{{detailData.desc}}</div>
             <div class="bottom clearfix">
-              <el-button type="danger" size="medium" @click="toRead(detailData.id)">开始阅读</el-button>
+              <el-button type="danger" size="medium" @click="toRead(1)">{{detailData.va_type == "1" ? '开始观看' : '开始阅读'}}</el-button>
               <!-- :icon="detailData.star == 1 ? 'el-icon-star-on' : 'el-icon-star-off'" -->
               <el-button type="warning" plain size="medium"
                 :icon="stars.indexOf(detailData.id) > -1 ? 'el-icon-star-on' : 'el-icon-star-off'"
@@ -23,9 +23,11 @@
           </div>
         </div>
         <div class="detail_zhangjie">
-          <h3>更新章节</h3>
-          <div v-for="item in detailData.graphs" :key="item.num" class="graph">
-            第{{item.num}}章：{{item.name}}
+          <h3>更新{{detailData.va_type == "1" ? '剧集' : '章节'}}</h3>
+          <div v-for="item in detailData.graphs" :key="item.num" class="graph"
+            @click="toRead(item.num, item.seconds)"
+          >
+            第{{item.num}}{{detailData.va_type == "1" ? '集' : '章'}}：{{item.name}}
           </div>
         </div>
       </div>
@@ -53,7 +55,7 @@
   </div>
 </template>
 <script>
-import Header from "../../components/Header";
+import Header from "../../components/Headern";
 export default {
   components: {
     Header
@@ -194,8 +196,27 @@ export default {
 
       })
     },
-    toRead(id) {
-      this.$router.push("/read/" + id);
+    toRead(currentPage, seconds) {
+      console.log(currentPage, "222")
+      if(this.detailData.va_type == "1") {
+        // 动画
+        let url = "/video/" + this.detailData.id;
+        if(currentPage) {
+          url += "?currentPage=" + (Number(currentPage) - 1);
+        }
+        if(seconds) {
+          url += "&seconds=" + seconds;
+        }
+        this.$router.push(url);
+      }else if(this.detailData.va_type == "2") {
+        // 漫画
+        let url = "/read/" + this.detailData.id;
+        if(currentPage) {
+          url += "?currentPage=" + (Number(currentPage) - 1);
+        }
+        this.$router.push(url);
+      }
+
     }
   }
 }
@@ -210,7 +231,7 @@ export default {
     .content{
       box-sizing: border-box;
       width: 100%;
-      height: calc(100% - 140px);
+      height: calc(100% - 50px);
       padding: 20px 20px 20px 40px;
       background: rgba(255,255,255,.6);
       // background: rgba(0,0,0,.6);

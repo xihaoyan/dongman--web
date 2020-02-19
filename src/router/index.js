@@ -7,6 +7,7 @@ import MyStar from '@/pages/client/mystar.vue';
 import Detail from '@/pages/client/detail.vue';
 import History from '@/pages/client/history.vue';
 import Read from '@/pages/client/read.vue';
+import Video from '@/pages/client/video.vue';
 
 import Manage from '@/pages/server/manage.vue';
 import Editlist from '@/pages/server/editlist.vue';
@@ -57,6 +58,14 @@ Vue.use(Router)
         auth: true   // 用于判断当前路由是否需要登陆
       },
       component: Read
+    },
+    {
+      path: '/video/:id',
+      name: 'Video',
+      meta: {
+        auth: true   // 用于判断当前路由是否需要登陆
+      },
+      component: Video
     },
     {
       path: '/editlist',

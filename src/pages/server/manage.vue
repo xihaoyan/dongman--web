@@ -6,6 +6,9 @@
       <router-link to="/editlist">
         <el-button type="primary" class="add_btn" size="small" icon="el-icon-plus">新增动漫</el-button>
       </router-link>
+      <el-input placeholder="请输入内容" v-model="keyword" class="input-with-select" size="small">
+        <el-button slot="append" icon="el-icon-search" style="width:80px" @click="doSearch"></el-button>
+      </el-input>
       <el-table
         :data="graphsData"
         border
@@ -56,7 +59,7 @@
         >
           <template scope="scope">
             <el-button plain class="add_btn" type="primary" size="mini" icon="el-icon-edit" @click="toEdit(scope.row.id)">编辑</el-button>
-            <el-button plain class="add_btn" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+            <el-button plain class="add_btn" type="danger" size="mini" icon="el-icon-delete" @click="toDelete(scope.row.id)">删除</el-button>
             <el-button plain class="add_btn" type="warning" size="mini" icon="el-icon-document" @click="toRemark(scope.row.id)">评论管理</el-button>
           </template>
         </el-table-column>
@@ -72,7 +75,8 @@
   </div>
 </template>
 <script>
-import Headerh from "../../components/Headerh"
+import Headerh from "../../components/Headerh";
+import qs from "qs";
 export default {
   data() {
     return {
@@ -81,7 +85,8 @@ export default {
       total: 0,
       pageNumber: 1,
       pageSize: 10,
-      currentPage: 1
+      currentPage: 1,
+      keyword: ""
     }
   },
   components: {
@@ -93,24 +98,37 @@ export default {
   methods: {
     async getListData() {
       this.loading = true;
-      const res = await this.$axios.get("/api/list/list", {
+      const params = {
         pageNumber: 1,
         pageSize: 10
-      });
+      }
+      if(this.keyword) {
+        params.keyword = this.keyword;
+      }
+      const res = await this.$axios.get("/api/list/list?" + qs.stringify(params));
       this.graphsData = res.data.data.list;
       this.total = res.data.data.total;
       this.loading = false;
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      // console.log(`当前页: ${val}`);
       this.pageNumber = val;
       this.getListData();
     },
     toEdit(id) {
       this.$router.push("/editlist/" + id);
     },
+    async toDelete(id) {
+      await this.$axios.post("/api/list/delete", {id}).then(res => {
+        console.log(res, "333")
+        this.getListData();
+      });
+    },
     toRemark(id) {
       this.$router.push("/remark/" + id);
+    },
+    doSearch() {
+      this.getListData();
     }
   }
 }
@@ -141,6 +159,11 @@ export default {
         float: right;
         margin-top: 20px;
       }
+      .input-with-select{
+        width: 400px;
+        margin-left: 360px;
+      }
+
     }
 
   }

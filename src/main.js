@@ -7,9 +7,15 @@ import axios from "axios";
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+
+// import videojs from 'video.js'
+// import 'video.js/dist/video-js.css'
+
+
 Vue.use(ElementUI);
 
 
+// Vue.prototype.$video = videojs
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios;
 

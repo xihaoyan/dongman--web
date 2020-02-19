@@ -8,8 +8,8 @@
           <div class="name" @click="toDetail(item.id)">{{item.name}}</div>
           <div class="desc">{{item.desc}}</div>
           <div class="bottom clearfix">
-            <time class="time">更新至{{ item.last_hua }}</time>
-            <el-button type="primary" class="button" size="small" @click="startRead(item.id)">开始阅读</el-button>
+            <time class="time">更新至第{{ item.last_hua }}{{item.va_type == "1" ? '集' : '章'}}</time>
+            <el-button type="primary" class="button" size="small" @click="startRead(item.id, item.va_type)">{{item.va_type == "1" ? '开始观看' : '开始阅读'}}</el-button>
           </div>
         </div>
       </el-card>
@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-import Header from "../../components/Header"
+import Header from "../../components/Headern"
 export default {
   components: {
     Header
@@ -157,8 +157,12 @@ export default {
       })
 
     },
-    startRead(id) {
-      this.$router.push("/read/" + id);
+    startRead(id, type) {
+      if(type == "1") {
+        this.$router.push("/video/" + id);
+      }else {
+        this.$router.push("/read/" + id);
+      }
     },
   }
 }
@@ -174,7 +178,7 @@ export default {
     .content{
       box-sizing: border-box;
       width: 100%;
-      height: calc(100% - 120px);
+      height: calc(100% - 50px);
       padding: 20px 20px 20px 40px;
       background: rgba(255,255,255,.6);
       // background: rgba(0,0,0,.6);

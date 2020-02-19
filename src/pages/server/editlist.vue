@@ -1,5 +1,6 @@
 <template>
   <div id="addlist" v-loading.fullscreen="loading">
+    <Headerh></Headerh>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" size="small">
       <h3 style="color:#333;text-align:center;margin-bottom:20px;">{{title}}动漫</h3>
       <el-row>
@@ -85,11 +86,12 @@
           label="章节文件">
           <template slot-scope="scope">
             <div>
+              <!-- 上传文件：动画，仅可上传一个， 漫画，可上传多个 -->
               <el-upload
                 class="upload-demo"
                 action="/api/file/uploadMultiple"
                 :show-file-list="false"
-                multiple
+                :multiple="ruleForm.va_type == '1' ? false : true"
                 :on-success="function (res, file) { return uploadFileSuccess(res, file, scope.$index)}"
               >
                 <el-button size="small" type="text">上传文件</el-button>
@@ -120,6 +122,7 @@
   </div>
 </template>
 <script>
+import Headerh from "../../components/Headerh"
 export default {
   data() {
     return {
@@ -158,6 +161,9 @@ export default {
       title: "新增",
       itemId: null,
     }
+  },
+  components: {
+    Headerh
   },
   watch: {
     "$route": {
@@ -319,6 +325,7 @@ export default {
     padding: 20px 40px;
     box-sizing: border-box;
     overflow-y: auto;
+    position: relative;
     .el-form{
       width: 100%;
       box-sizing: border-box;

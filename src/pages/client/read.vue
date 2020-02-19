@@ -1,8 +1,16 @@
 <template>
   <div id="read" v-loading.fullscreen="loading">
     <div class="content">
+      <div class="top">
+        <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">去首页</el-breadcrumb-item>
+      </el-breadcrumb>
       <!-- {{graphsData}} -->
-      <h3>第{{graphsData.num}}章- {{graphsData.name}}</h3>
+        <h3>第{{graphsData.num}}章- {{graphsData.name}}</h3>
+
+      </div>
+
+
       <div class="image__lazy">
         <el-image v-for="url in graphsData.urls" :key="url" :src="url" lazy></el-image>
       </div>
@@ -40,9 +48,8 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route)
     if(this.$route.query.currentPage) {
-      this.currentPage = this.$route.query.currentPage + 1;
+      this.currentPage = Number(this.$route.query.currentPage + 1);
       this.getGraphData(this.$route.query.currentPage);
     }else {
       this.getGraphData();
@@ -55,7 +62,7 @@ export default {
       if(currentPage) {
         url += '&currentPage=' + currentPage;
       }
-      this.$axios.get("/api/list/getItemImage?userId=" + sessionStorage.getItem("id") + '&' + url).then(res => {
+      this.$axios.get("/api/list/getItemImage?type=1&userId=" + sessionStorage.getItem("id") + '&' + url).then(res => {
         this.graphsData = res.data.data.data;
         this.total = res.data.data.total;
         this.loading = false;
@@ -73,6 +80,10 @@ export default {
     height: 100%;
     width: 100%;
     // padding: 20px 40px;
+    .top{
+      display: flex;
+      justify-content: space-around;
+    }
     .content{
       box-sizing: border-box;
       width: 100%;
@@ -98,8 +109,10 @@ export default {
       }
     }
     .el-pagination{
-      margin: 20px auto 0 auto;
-      width: 340px;
+      margin: 14px auto 0 auto;
+      // width: 340px;
+      display: flex;
+      justify-content: center;
     }
   }
 </style>

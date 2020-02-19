@@ -33,4 +33,14 @@ export default {
   position: relative;
   text-align: left;
 }
+.el-breadcrumb__item span,
+.el-breadcrumb__item span{
+  color: #000 !important;
+  &:hover{
+    color: #F56C6C !important;
+  }
+}
+.el-breadcrumb__item span{
+  cursor: pointer !important;
+}
 </style>

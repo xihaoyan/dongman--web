@@ -9,9 +9,9 @@
             <div class="name" @click="toDetail(item.id)">{{item.name}}</div>
             <div class="desc">{{item.desc}}</div>
             <div class="bottom clearfix">
-              <time class="time">更新至{{ item.last_hua }}</time>
+              <time class="time">{{ item.status == '1' ? ('共' + item.last_hua + '集全') : ('更新至' + item.last_hua)}}</time>
             </div>
-            <el-button type="danger" class="button" size="small" @click="startRead(item.id)">开始阅读</el-button>
+            <el-button type="danger" class="button" size="small" @click="startRead(item.id, item.va_type)">{{item.va_type == "1" ? "开始观看" : "开始阅读"}}</el-button>
           </div>
         </el-card>
       </template>
@@ -69,8 +69,12 @@ export default {
       this.total = res.data.data.total;
       this.loading = false;
     },
-    startRead(id) {
-      this.$router.push("/read/" + id);
+    startRead(id, va_type) {
+      if(va_type == "1") {
+        this.$router.push("/video/" + id);
+      }else if(va_type == "2") {
+        this.$router.push("/read/" + id);
+      }
     },
   }
 }
@@ -82,18 +86,18 @@ export default {
     width: 100%;
     // background: url("../../assets/images/bg.jpg") 100% 100%;
     padding: 20px 40px;
+    position: relative;
     .content{
       box-sizing: border-box;
       width: 100%;
-      height: calc(100% - 166px);
+      height: calc(100% - 126px);
       padding: 20px 20px 20px 40px;
       background: rgba(255,255,255,.6);
       // background: rgba(0,0,0,.6);
-      margin-top: 10px;
       clear: both;
       overflow: auto;
       .el-card{
-        width: 484px;
+        width: 405px;
         height: 190px;
         margin-right: 24px;
         margin-bottom: 24px;
@@ -106,6 +110,8 @@ export default {
         }
         .name{
           cursor: pointer;
+          font-weight: 900;
+          color: #666;
         }
         .desc{
           overflow: hidden;
@@ -113,18 +119,23 @@ export default {
           display: -webkit-box;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
+          margin-top: 12px;
         }
         .el-card__body{
           display: flex;
           justify-content: flex-start;
         }
         .button{
-          margin-top: 20px;
+          margin-top: 12px;
         }
         .card_text{
-          padding: 14px;
+          padding: 12px 14px;
           float: left;
           width: calc(100% - 168px);
+        }
+        .bottom{
+          margin-top: 12px;
+          color: #E6A23C;
         }
       }
 

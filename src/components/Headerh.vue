@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div class="nav">
+      <el-breadcrumb separator="/manage" v-if="pathName != '/manage'">
+        <el-breadcrumb-item :to="{ path: '/manage' }">去首页</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <el-dropdown class="user_info">
       <span class="el-dropdown-link">
         {{username}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -16,10 +21,10 @@ export default {
   data() {
     return {
       username: sessionStorage.getItem("Token"),
+      pathName: this.$route.path
     }
   },
   created() {
-
   },
   methods: {
     logout() {
@@ -46,8 +51,10 @@ export default {
   }
 }
 .nav{
-  padding: 0px 40px;
-  display: flex;
-  justify-content: flex-start;
+  position: absolute;
+  top:30px;
+  left: 50px;
+  z-index: 999;
+  color: #000;
 }
 </style>

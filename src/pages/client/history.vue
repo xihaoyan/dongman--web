@@ -9,9 +9,11 @@
           <div class="name">{{item.name}}</div>
           <div class="desc">{{ item.desc }}</div>
           <div class="bottom clearfix">
-            <time class="time">上次阅读至{{ item.last_hua }}</time>
-            <el-button type="primary" class="button" size="small" @click="toRead(item.id, item.currentPage)">继续阅读</el-button>
+            <time class="time">{{item.va_type == "1" ? `上次观看至第${Number(item.currentPage) + 1}集` : `上次阅读至第${Number(item.currentPage) + 1}章`}}</time>
           </div>
+          <el-button type="primary" class="button" size="small" @click="toRead(item)">
+            {{item.va_type == "1" ? '继续观看' : '继续阅读'}}
+          </el-button>
         </div>
       </el-card>
     </div>
@@ -26,7 +28,7 @@
   </div>
 </template>
 <script>
-import Header from "../../components/Header"
+import Header from "../../components/Headern"
 export default {
   components: {
     Header
@@ -163,8 +165,19 @@ export default {
     toDetail(id) {
       this.$router.push(`/detail/${id}`)
     },
-    toRead(id, currentPage) {
-      this.$router.push("/read/" + id + "?currentPage=" + currentPage);
+    toRead(item) {
+      const {id, currentPage, seconds, va_type} = item;
+      if(va_type == "1") {
+        let url = "/video/" + id + "?currentPage=" + currentPage;
+        if(seconds) {
+          url += '&seconds=' + seconds;
+        }
+        this.$router.push(url);
+      }else if(va_type == "2") {
+        const url = "/read/" + id + "?currentPage=" + currentPage;
+        this.$router.push(url);
+      }
+
     }
   }
 }
@@ -180,7 +193,7 @@ export default {
     .content{
       box-sizing: border-box;
       width: 100%;
-      height: calc(100% - 166px);
+      height: calc(100% - 50px);
       padding: 20px 20px 20px 40px;
       background: rgba(255,255,255,.6);
       // background: rgba(0,0,0,.6);
@@ -206,10 +219,14 @@ export default {
           display: -webkit-box;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
+          margin: 12px 0;
         }
         .el-card__body{
           display: flex;
           justify-content: flex-start;
+        }
+        .bottom{
+          margin-bottom: 10px;
         }
       }
 
@@ -218,6 +235,8 @@ export default {
       width: 100%l;
       background: rgba(255,255,255,.6);
       padding-bottom: 16px;
+      display: flex;
+      justify-content: flex-end;
     }
   }
 

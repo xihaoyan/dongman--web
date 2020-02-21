@@ -6,7 +6,7 @@
       <router-link to="/editlist">
         <el-button type="primary" class="add_btn" size="small" icon="el-icon-plus">新增动漫</el-button>
       </router-link>
-      <el-input placeholder="请输入内容" v-model="keyword" class="input-with-select" size="small">
+      <el-input placeholder="请输入内容" v-model="keyword" class="input-with-select" size="small" @keydown.enter.native="doSearch">
         <el-button slot="append" icon="el-icon-search" style="width:80px" @click="doSearch"></el-button>
       </el-input>
       <el-table
@@ -120,7 +120,6 @@ export default {
     },
     async toDelete(id) {
       await this.$axios.post("/api/list/delete", {id}).then(res => {
-        console.log(res, "333")
         this.getListData();
       });
     },
@@ -161,7 +160,7 @@ export default {
       }
       .input-with-select{
         width: 400px;
-        margin-left: 360px;
+        margin-left: calc(50% - 300px);
       }
 
     }

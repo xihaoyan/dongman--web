@@ -197,12 +197,11 @@ export default {
       })
     },
     toRead(currentPage, seconds) {
-      console.log(currentPage, "222")
       if(this.detailData.va_type == "1") {
         // 动画
         let url = "/video/" + this.detailData.id;
         if(currentPage) {
-          url += "?currentPage=" + (Number(currentPage) - 1);
+          url += "?currentPage=" + Number(currentPage);
         }
         if(seconds) {
           url += "&seconds=" + seconds;
@@ -212,7 +211,7 @@ export default {
         // 漫画
         let url = "/read/" + this.detailData.id;
         if(currentPage) {
-          url += "?currentPage=" + (Number(currentPage) - 1);
+          url += "?currentPage=" + Number(currentPage);
         }
         this.$router.push(url);
       }

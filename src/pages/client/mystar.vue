@@ -2,26 +2,30 @@
   <div id="mystar" v-loading.fullscreen="loading">
     <Header></Header>
     <div class="content">
-      <el-card :body-style="{ padding: '0px' }" v-for="item in listData" :key="item.id">
-        <img :src="item.img" class="image" @click="toDetail(item.id)">
-        <div class="card_text">
-          <div class="name" @click="toDetail(item.id)">{{item.name}}</div>
-          <div class="desc">{{item.desc}}</div>
-          <div class="bottom clearfix">
-            <time class="time">更新至第{{ item.last_hua }}{{item.va_type == "1" ? '集' : '章'}}</time>
-            <el-button type="primary" class="button" size="small" @click="startRead(item.id, item.va_type)">{{item.va_type == "1" ? '开始观看' : '开始阅读'}}</el-button>
+      <template v-if="listData && listData.length > 0">
+        <el-card :body-style="{ padding: '0px' }" v-for="item in listData" :key="item.id">
+          <img :src="item.img" class="image" @click="toDetail(item.id)">
+          <div class="card_text">
+            <div class="name" @click="toDetail(item.id)">{{item.name}}</div>
+            <div class="desc">{{item.desc}}</div>
+            <div class="bottom clearfix">
+              <time class="time">更新至第{{ item.last_hua }}{{item.va_type == "1" ? '集' : '章'}}</time>
+              <el-button type="primary" class="button" size="small" @click="startRead(item.id, item.va_type)">{{item.va_type == "1" ? '开始观看' : '开始阅读'}}</el-button>
+            </div>
           </div>
-        </div>
-      </el-card>
+        </el-card>
+      </template>
+      <Nodata v-else></Nodata>
     </div>
-
   </div>
 </template>
 <script>
-import Header from "../../components/Headern"
+import Header from "../../components/Headern";
+import Nodata from "../../components/Nodata";
 export default {
   components: {
-    Header
+    Header,
+    Nodata
   },
   data() {
     return {

@@ -57,7 +57,7 @@ export default {
   async mounted() {
     this.initVideo();
     if (this.$route.query.currentPage) {
-      this.currentPage = Number(this.$route.query.currentPage + 1);
+      this.currentPage = Number(this.$route.query.currentPage);
       await this.getGraphData(this.$route.query.currentPage);
     } else {
       await this.getGraphData();
@@ -68,7 +68,7 @@ export default {
       this.video = document.getElementById("my-video");
       const that = this;
       this.video.addEventListener("pause", function() {
-        that.setHistory(that.currentPage - 1, that.video.currentTime);
+        that.setHistory(that.currentPage, that.video.currentTime);
       }, false);
     },
     getGraphData(currentPage, seconds) {
@@ -111,7 +111,7 @@ export default {
     currentChange(val) {
       this.isFirst = true;
       this.currentPage = val;
-      this.getGraphData(val - 1);
+      this.getGraphData(val);
 
     }
   }

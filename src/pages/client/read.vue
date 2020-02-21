@@ -49,7 +49,7 @@ export default {
   },
   mounted() {
     if(this.$route.query.currentPage) {
-      this.currentPage = Number(this.$route.query.currentPage + 1);
+      this.currentPage = Number(this.$route.query.currentPage);
       this.getGraphData(this.$route.query.currentPage);
     }else {
       this.getGraphData();
@@ -69,7 +69,7 @@ export default {
       })
     },
     currentChange(val) {
-      this.getGraphData(val - 1);
+      this.getGraphData(val);
     }
   }
 }

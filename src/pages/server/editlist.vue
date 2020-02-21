@@ -129,12 +129,12 @@ export default {
       loading: false,
       ruleForm: {
         img: "",
-        name: '2',
+        name: '',
         type: '玄幻',
-        auth: '3',
-        desc: '4',
+        auth: '',
+        desc: '',
         status: '1',
-        va_type: "1"
+        va_type: "2"
       },
       rules: {
         name: [
@@ -185,9 +185,10 @@ export default {
       return a.num - b.num;
     },
     submitForm(formName) {
-      this.loading = true;
+
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
+
           if(!this.ruleForm.img) {
             this.$message.error("请上传封面图片");
             return false;
@@ -196,7 +197,12 @@ export default {
             return item.num && item.name && item.images;
           })
           if(ls) {
+            if(this.graphsData.length == 0) {
+              this.$message.error("请完善章节信息");
+              return false;
+            }
             this.graphsData.sort(this.sortJson);
+            this.loading = true;
             if(this.title == "新增") {
               await this.$axios.post("/api/list/add", {
                 img: this.ruleForm.img,
@@ -223,13 +229,13 @@ export default {
                 last_hua: this.graphsData[this.graphsData.length - 1].num
               });
             }
-
             this.$message.success("提交成功")
             this.loading = false;
             this.$router.push("/manage")
 
           }else {
             this.$message.error("请完善章节信息");
+            this.loading = false;
             return false;
           }
 
@@ -271,7 +277,6 @@ export default {
             if(res.data.data.id) {
               lsarr.push(res.data.data.id);
             }
-            console.log(lsarr, "333")
             item.images = lsarr.join(",");
           }
         })

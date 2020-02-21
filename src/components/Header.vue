@@ -12,7 +12,7 @@
       </el-dropdown-menu>
     </el-dropdown>
     <div class="search">
-      <el-input placeholder="请输入内容" v-model="keyword" class="input-with-select">
+      <el-input placeholder="请输入内容" v-model="keyword" class="input-with-select" @keydown.enter.native="doSearch">
         <el-button slot="append" icon="el-icon-search" style="width:80px" @click="doSearch"></el-button>
       </el-input>
     </div>

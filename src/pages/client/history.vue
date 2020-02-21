@@ -2,20 +2,23 @@
   <div id="history">
     <Header></Header>
     <div class="content">
-      <el-card :body-style="{ padding: '0px' }" v-for="item in listData" :key="item.id">
-        <!-- item.id, item.currentPage -->
-        <img :src="item.img" class="image">
-        <div style="padding: 14px;float:left;">
-          <div class="name">{{item.name}}</div>
-          <div class="desc">{{ item.desc }}</div>
-          <div class="bottom clearfix">
-            <time class="time">{{item.va_type == "1" ? `上次观看至第${Number(item.currentPage) + 1}集` : `上次阅读至第${Number(item.currentPage) + 1}章`}}</time>
+      <template v-if="listData && listData.length > 0">
+        <el-card :body-style="{ padding: '0px' }" v-for="item in listData" :key="item.id">
+          <!-- item.id, item.currentPage -->
+          <img :src="item.img" class="image">
+          <div style="padding: 14px;float:left;">
+            <div class="name">{{item.name}}</div>
+            <div class="desc">{{ item.desc }}</div>
+            <div class="bottom clearfix">
+              <time class="time">{{item.va_type == "1" ? `上次观看至第${Number(item.currentPage)}集` : `上次阅读至第${Number(item.currentPage)}章`}}</time>
+            </div>
+            <el-button type="primary" class="button" size="small" @click="toRead(item)">
+              {{item.va_type == "1" ? '继续观看' : '继续阅读'}}
+            </el-button>
           </div>
-          <el-button type="primary" class="button" size="small" @click="toRead(item)">
-            {{item.va_type == "1" ? '继续观看' : '继续阅读'}}
-          </el-button>
-        </div>
-      </el-card>
+        </el-card>
+      </template>
+      <Nodata v-else></Nodata>
     </div>
     <div class="pagination">
       <el-pagination
@@ -28,10 +31,12 @@
   </div>
 </template>
 <script>
-import Header from "../../components/Headern"
+import Header from "../../components/Headern";
+import Nodata from "../../components/Nodata";
 export default {
   components: {
-    Header
+    Header,
+    Nodata
   },
   data() {
     return {

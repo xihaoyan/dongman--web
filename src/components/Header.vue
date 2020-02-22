@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .user_info{
   position: absolute;
   top:20px;

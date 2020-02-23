@@ -10,7 +10,7 @@
             <div class="name">{{item.name}}</div>
             <div class="desc">{{ item.desc }}</div>
             <div class="bottom clearfix">
-              <time class="time">{{item.va_type == "1" ? `上次观看至第${Number(item.currentPage)}集` : `上次阅读至第${Number(item.currentPage)}章`}}</time>
+              <time class="time">{{item.va_type == "1" ? `上次观看至第${Number(item.currentPage) + 1}集` : `上次阅读至第${Number(item.currentPage) + 1}章`}}</time>
             </div>
             <el-button type="primary" class="button" size="small" @click="toRead(item)">
               {{item.va_type == "1" ? '继续观看' : '继续阅读'}}

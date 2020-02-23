@@ -35,7 +35,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .user_info{
   position: absolute;
   top:30px;

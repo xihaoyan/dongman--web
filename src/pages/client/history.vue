@@ -6,7 +6,7 @@
         <el-card :body-style="{ padding: '0px' }" v-for="item in listData" :key="item.id">
           <!-- item.id, item.currentPage -->
           <img :src="item.img" class="image">
-          <div style="padding: 14px;float:left;">
+          <div class="card_text">
             <div class="name">{{item.name}}</div>
             <div class="desc">{{ item.desc }}</div>
             <div class="bottom clearfix">
@@ -76,7 +76,7 @@ export default {
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   #history{
     box-sizing: border-box;
     height: 100%;
@@ -100,9 +100,24 @@ export default {
         margin-right: 24px;
         margin-bottom: 24px;
         float: left;
+        .el-card__body{
+          width: 100%;
+          height: 192px;
+          box-sizing: border-box;
+          // display: flex;
+          // justify-content: space-between;
+        }
         .image{
           width: 140px;
+          height: 192px;
           cursor: pointer;
+          float: left;
+        }
+        .card_text{
+          padding: 14px;
+          // flex: 1;
+          float: left;
+          width: calc(100% - 170px);
         }
         .name{
           cursor: pointer;
